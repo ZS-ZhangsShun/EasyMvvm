@@ -29,6 +29,8 @@ android {
 }
 
 dependencies {
-    api "androidx.core:$rootProject.coreKtx"
-    api "androidx.appcompat:$rootProject.appcompat"
+    //使用api方式引入 则 依赖common工程的module无需再重复引用
+    api "androidx.core:core-ktx:$rootProject.coreKtx"
+    api "androidx.appcompat:appcompat:$rootProject.appcompat"
+    api "com.github.ZS-ZhangsShun:EasyCommonUtils:$rootProject.easyCommonUtils"
 }
