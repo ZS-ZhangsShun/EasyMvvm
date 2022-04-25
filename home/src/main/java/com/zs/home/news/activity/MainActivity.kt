@@ -1,7 +1,9 @@
 package com.zs.home.news.activity
 
+import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
 import com.zs.easy.common.http.retrofit.CommonRetrofitServiceFactory
 import com.zs.easy.common.http.retrofit.EasySubscriber
 import com.zs.easy.common.http.retrofit.ExceptionHandle
@@ -17,6 +19,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            0
+        )
 
         CommonRetrofitServiceFactory.getInstance().createService(NewsApi::class.java)
             .getNewsChannels()
