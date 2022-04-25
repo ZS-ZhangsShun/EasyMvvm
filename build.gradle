@@ -44,16 +44,16 @@ task clean(type: Delete) {
 }
 
 ext {
-    compileSdk = 30
+    compileSdk = 31
     minSdk = 19
-    targetSdk = 30
+    targetSdk = 31
     versionCode = 1000000
     versionName = "1.0.0"
     isApplication = false
 
     supportLibraryVersion = '28.0.0'
 
-    easyCommonUtils = "1.7.2.1"
+    easyCommonUtils = "1.8.4"
     coreKtx = "1.7.0"
     appcompat = "1.4.1"
 }
