@@ -1,20 +1,20 @@
 package com.zs.home.network.dto.news;
 
-import com.zs.home.network.dto.base.TecentBaseResponseDTO;
+import com.zs.home.network.dto.base.TencentBaseResponseDTO;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class NewsListDTO extends TecentBaseResponseDTO implements Serializable {
+public class NewsListDTO extends TencentBaseResponseDTO implements Serializable {
 
-    public ShowapiResBody showapiResBody;
+    public ShowapiResBody showapi_res_body;
 
-    public ShowapiResBody getShowapiResBody() {
-        return showapiResBody;
+    public ShowapiResBody getShowapi_res_body() {
+        return showapi_res_body;
     }
 
-    public void setShowapiResBody(ShowapiResBody showapiResBody) {
-        this.showapiResBody = showapiResBody;
+    public void setShowapi_res_body(ShowapiResBody showapi_res_body) {
+        this.showapi_res_body = showapi_res_body;
     }
 
     public class ShowapiResBody implements Serializable {

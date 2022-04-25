@@ -14,12 +14,12 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * 腾讯云认证鉴权工具类 规则请参考：https://cloud.tencent.com/document/product/628/11819
  */
-public final class TecentUtil {
+public final class TencentUtil {
     public static final String secretId = "AKIDFi11SK0f3iGt71QnOa7NWdTANmbhl7VWZt20";
     public static final String secretKey = "IAiomV1EyhL3UHh947jQcQ7Z8RakCzC3ohT94U4c";
     private static final String CONTENT_CHARSET = "UTF-8";
     private static final String HMAC_ALGORITHM = "HmacSHA1";
-    private TecentUtil(){
+    private TencentUtil(){
     }
 
     private static String sign(String secret, String timeStr) {
