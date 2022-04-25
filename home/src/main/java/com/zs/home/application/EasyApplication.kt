@@ -13,8 +13,8 @@ class EasyApplication : Application() {
         super.onCreate()
         EasyCommon.init(this, "easy_mvvm", true)
         EasyConstants.TAG = "easy_mvvm"
-        //日志最大10k
-        LogUtil.setMaxLogLength(0.01f * 1024 * 1024)
+        //日志最大100k
+        LogUtil.setMaxLogLength(0.1f * 1024 * 1024)
         initHttp()
     }
 
