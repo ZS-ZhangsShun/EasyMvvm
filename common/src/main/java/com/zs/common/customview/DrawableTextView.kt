@@ -101,48 +101,48 @@ class DrawableTextView : AppCompatTextView {
     /**
      * 设置左侧图片并重绘
      */
-/*    fun setDrawableLeft(drawableLeft: Drawable?) {
+    fun setDrawableLeft(drawableLeft: Drawable?) {
         this.drawableLeft = drawableLeft
         invalidate()
-    }*/
+    }
 
     /**
      * 设置左侧图片并重绘
      */
-/*    fun setDrawableLeft(drawableLeftRes: Int) {
-        drawableLeft = mContext.resources.getDrawable(drawableLeftRes,null)
-        invalidate()
-    }*/
-
-    /**
-     * 设置右侧图片并重绘
-     */
-/*    fun setDrawableRight(drawableRight: Drawable?) {
-        this.drawableRight = drawableLeft
-        invalidate()
-    }*/
-
-    /**
-     * 设置右侧图片并重绘
-     */
-/*    fun setDrawableRight(drawableRightRes: Int) {
-        drawableRight = mContext.resources.getDrawable(drawableRightRes,null)
+    fun setDrawableLeft(drawableLeftRes: Int) {
+        drawableLeft = mContext.resources.getDrawable(drawableLeftRes, null)
         invalidate()
     }
 
-    *//**
+    /**
+     * 设置右侧图片并重绘
+     */
+    fun setDrawableRight(drawableRight: Drawable?) {
+        this.drawableRight = drawableLeft
+        invalidate()
+    }
+
+    /**
+     * 设置右侧图片并重绘
+     */
+    fun setDrawableRight(drawableRightRes: Int) {
+        drawableRight = mContext.resources.getDrawable(drawableRightRes, null)
+        invalidate()
+    }
+
+    /**
      * 设置上部图片并重绘
-     *//*
+     */
     fun setDrawable(drawableTop: Drawable?) {
         this.drawableTop = drawableTop
         invalidate()
     }
 
-    *//**
+    /**
      * 设置右侧图片并重绘
-     *//*
+     */
     fun setDrawableTop(drawableTopRes: Int) {
-        drawableTop = mContext.resources.getDrawable(drawableTopRes,null)
+        drawableTop = mContext.resources.getDrawable(drawableTopRes, null)
         invalidate()
-    }*/
+    }
 }
