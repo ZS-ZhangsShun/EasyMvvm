@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name="com.zs.home.news.activity.MainActivity"
+            android:name="com.zs.home.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
