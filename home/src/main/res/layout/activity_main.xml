@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.zs.home.news.activity.MainActivity">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <com.zs.common.viewpager.CustomViewPager
+        android:id="@+id/home_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/fragment_content"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#d9d9d9" />
+
+    <LinearLayout
+        android:id="@+id/home_bottom_lin"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sw_40dp"
+        android:layout_marginTop="@dimen/sw_7dp"
+        android:orientation="horizontal">
+
+        <com.zs.common.customview.DrawableTextView
+            android:id="@+id/home_news_dtv"
+            style="@style/HomeBottomTextStyle"
+            android:text="大喇叭"
+            app:topDrawable="@drawable/home_news_unselected" />
+
+        <com.zs.common.customview.DrawableTextView
+            android:id="@+id/home_mine_dtv1"
+            style="@style/HomeBottomTextStyle"
+            android:text="我的"
+            app:topDrawable="@drawable/home_mine_no" />
+
+    </LinearLayout>
 
 </LinearLayout>

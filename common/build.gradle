@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -26,11 +27,19 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     //使用api方式引入 则 依赖common工程的module无需再重复引用
     api "androidx.core:core-ktx:$rootProject.coreKtx"
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx"
     api "androidx.appcompat:appcompat:$rootProject.appcompat"
     api "com.github.ZS-ZhangsShun:EasyCommonUtils:$rootProject.easyCommonUtils"
+    api "com.google.android.material:material:$rootProject.material"
 }
