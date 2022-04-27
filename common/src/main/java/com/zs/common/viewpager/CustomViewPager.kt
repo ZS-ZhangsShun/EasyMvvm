@@ -1,27 +1,21 @@
-package com.zs.common.viewpager;
+package com.zs.common.viewpager
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.content.Context
+import android.util.AttributeSet
+import androidx.viewpager.widget.ViewPager
+import android.view.MotionEvent
 
-import androidx.viewpager.widget.ViewPager;
+class CustomViewPager : ViewPager {
+    constructor(context: Context?) : super(context!!)
+    constructor(context: Context?, attrs: AttributeSet?) : super(
+        context!!, attrs
+    )
 
-public class CustomViewPager extends ViewPager {
-    public CustomViewPager(Context context) {
-        super(context);
+    override fun onTouchEvent(arg0: MotionEvent): Boolean {
+        return false
     }
 
-    public CustomViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent arg0) {
-        return false;
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent arg0) {
-        return false;
+    override fun onInterceptTouchEvent(arg0: MotionEvent): Boolean {
+        return false
     }
 }
