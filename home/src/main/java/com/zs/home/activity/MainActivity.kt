@@ -24,8 +24,6 @@ import com.zs.home.R
 import com.zs.home.news.fragment.NewsFragment
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private val mNewsFragment: Fragment = NewsFragment()
-    private val mAccountFragment = MineFragment()
     var binding: ActivityMainBinding? = null
 
     private var fragments = mutableListOf<Fragment>()
@@ -46,40 +44,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         initView()
         initData()
-
-        CommonRetrofitServiceFactory.getInstance().createService(NewsApi::class.java)
-            .getNewsChannels()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : EasySubscriber<NewsChannelsDTO>() {
-                override fun onError(responseThrowable: ExceptionHandle.ResponseThrowable?) {
-                    LogUtil.i("getNewsChannels error code = ${responseThrowable!!.code}")
-                    LogUtil.i("getNewsChannels error = ${responseThrowable.errorJson}")
-                }
-
-                override fun onComplete(t: NewsChannelsDTO?) {
-                    LogUtil.i("getNewsChannels totalNum = ${t!!.showapi_res_body.totalNum}")
-
-                    val channel = t.showapi_res_body.channelList[0]
-                    CommonRetrofitServiceFactory.getInstance().createService(NewsApi::class.java)
-                        .getNewsContents(channel.channelId, channel.name, "1")
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(object : EasySubscriber<NewsListDTO>() {
-                            override fun onError(responseThrowable: ExceptionHandle.ResponseThrowable?) {
-                                LogUtil.i("getNewsContents error code = ${responseThrowable!!.code}")
-                                LogUtil.i("getNewsContents error = ${responseThrowable.errorJson}")
-                            }
-
-                            override fun onComplete(t: NewsListDTO?) {
-                                LogUtil.i("getNewsContents cur news size  = ${t!!.showapi_res_body.pagebean.contentlist.size}")
-                            }
-
-                        })
-                }
-
-            })
-
     }
 
     private fun initView() {
@@ -88,7 +52,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initData() {
-        fragments.add(MineFragment())
+        fragments.add(NewsFragment())
         fragments.add(MineFragment())
         vpAdapter = VpAdapter(supportFragmentManager, fragments)
         binding!!.homeVp.adapter = vpAdapter
