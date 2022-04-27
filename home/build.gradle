@@ -34,4 +34,5 @@ android {
 
 dependencies {
     api project(':common')
+    implementation "com.scwang.smartrefresh:SmartRefreshLayout:$rootProject.smartRefreshLayout"
 }

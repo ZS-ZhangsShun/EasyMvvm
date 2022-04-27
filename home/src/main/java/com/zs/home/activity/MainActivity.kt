@@ -21,9 +21,10 @@ import io.reactivex.schedulers.Schedulers
 import com.zs.common.viewpager.VpAdapter
 import android.view.View
 import com.zs.home.R
+import com.zs.home.news.fragment.NewsFragment
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private val mHomeFragment: Fragment = MineFragment()
+    private val mNewsFragment: Fragment = NewsFragment()
     private val mAccountFragment = MineFragment()
     var binding: ActivityMainBinding? = null
 
