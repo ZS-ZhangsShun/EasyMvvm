@@ -8,16 +8,7 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.zs.easy.common.http.retrofit.CommonRetrofitServiceFactory
-import com.zs.easy.common.http.retrofit.EasySubscriber
-import com.zs.easy.common.http.retrofit.ExceptionHandle
-import com.zs.easy.common.utils.LogUtil
 import com.zs.home.databinding.ActivityMainBinding
-import com.zs.home.network.api.NewsApi
-import com.zs.home.network.dto.news.NewsChannelsDTO
-import com.zs.home.network.dto.news.NewsListDTO
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import com.zs.common.viewpager.VpAdapter
 import android.view.View
 import com.zs.home.R
@@ -42,11 +33,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         )
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        initView()
+        initListener()
         initData()
     }
 
-    private fun initView() {
+    private fun initListener() {
         binding!!.homeNewsDtv.setOnClickListener(this)
         binding!!.homeMineDtv1.setOnClickListener(this)
     }
