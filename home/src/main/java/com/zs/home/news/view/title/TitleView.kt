@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
+import com.zs.easy.common.utils.LogUtil
 import com.zs.easy.common.utils.ToastUtil
 import com.zs.home.R
 import com.zs.home.databinding.TitleViewBinding
@@ -16,6 +17,7 @@ class TitleView(context: Context) : LinearLayout(context) {
         binding =
             DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.title_view, null, false)
         binding!!.root.setOnClickListener {
+            LogUtil.i("click url is ${viewModel!!.jumpUrl}")
             ToastUtil.showShortToast("click url is ${viewModel!!.jumpUrl}")
         }
         addView(binding!!.root)
