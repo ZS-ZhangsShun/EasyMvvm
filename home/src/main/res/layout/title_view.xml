@@ -2,9 +2,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="android.view.View" />
-        <import type="android.text.TextUtils" />
-        <import type="androidx.databinding.ObservableField" />
+
+        <variable
+            name="viewModel"
+            type="com.zs.home.news.view.title.TitleViewModel" />
     </data>
 
     <LinearLayout
@@ -14,16 +15,17 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_margin="16dp"
             android:id="@+id/item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sw_16dp"
             android:ellipsize="end"
-            android:maxLines="2"
             android:gravity="center_vertical"
+            android:maxLines="2"
+            android:text="@{viewModel.name}"
             android:textColor="#303030"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textSize="@dimen/sw_16sp"
+            android:textStyle="bold" />
 
         <View
             android:layout_width="match_parent"

@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import com.zs.home.R
-import com.zs.home.news.adapter.NewsListRecyclerViewAdapter.PictureTitleViewHolder
-import com.zs.home.news.adapter.NewsListRecyclerViewAdapter.TitleViewHolder
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.zs.common.base.viewholder.BaseViewHolder
+import com.zs.home.news.view.title.TitleView
+import com.zs.home.news.view.title.TitleViewModel
 
 class NewsListRecyclerViewAdapter(private val mContext: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -42,8 +43,7 @@ class NewsListRecyclerViewAdapter(private val mContext: Context) :
             view = LayoutInflater.from(mContext).inflate(R.layout.picture_title_view, parent, false)
             return PictureTitleViewHolder(view)
         } else {
-            view = LayoutInflater.from(mContext).inflate(R.layout.title_view, parent, false)
-            return TitleViewHolder(view)
+            return BaseViewHolder(TitleView(mContext))
         }
     }
 
@@ -60,17 +60,6 @@ class NewsListRecyclerViewAdapter(private val mContext: Context) :
         }
     }
 
-    private inner class TitleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var titleTextView: TextView
-
-        init {
-            titleTextView = itemView.findViewById(R.id.item_title)
-            itemView.setOnClickListener {
-                //                    WebviewActivity.startCommonWeb(mContext, "News", v.getTag()+"");
-            }
-        }
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.tag = mItems!![position].link
         if (holder is PictureTitleViewHolder) {
@@ -79,8 +68,11 @@ class NewsListRecyclerViewAdapter(private val mContext: Context) :
                 .load(mItems!![position].imageurls[0].url)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.picutureImageView)
-        } else if (holder is TitleViewHolder) {
-            holder.titleTextView.text = mItems!![position].title
+        } else if (holder.itemView is TitleView) {
+            val titleViewModel = TitleViewModel()
+            titleViewModel.jumpUrl = mItems!![position].link
+            titleViewModel.name = mItems!![position].title
+            (holder.itemView as TitleView).setData(titleViewModel)
         }
     }
 }
