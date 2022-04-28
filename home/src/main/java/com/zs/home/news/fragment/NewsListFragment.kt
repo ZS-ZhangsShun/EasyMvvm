@@ -16,7 +16,9 @@ import com.zs.easy.common.utils.LogUtil
 import com.zs.home.databinding.FragmentNewsBinding
 import com.zs.home.network.api.NewsApi
 import com.zs.home.network.dto.news.NewsListDTO
-import com.zs.home.network.dto.news.NewsListDTO.Contentlist
+import com.zs.home.news.base.BaseViewModel
+import com.zs.home.news.view.title.TitleViewModel
+import com.zs.home.news.view.titlewithpicture.TitlePictureViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -25,7 +27,7 @@ import io.reactivex.schedulers.Schedulers
  * 保留所有版权，未经允许请不要分享到互联网和其他人
  */
 class NewsListFragment : Fragment() {
-    private var contentlist: MutableList<Contentlist> = mutableListOf()
+    private var viewModels: MutableList<BaseViewModel> = mutableListOf()
     private var mAdapter: NewsListRecyclerViewAdapter? = null
     private var viewDataBinding: FragmentNewsBinding? = null
     private var mPage = 1
@@ -67,13 +69,28 @@ class NewsListFragment : Fragment() {
                 override fun onComplete(t: NewsListDTO?) {
                     LogUtil.i("getNewsContents cur news size  = ${t!!.showapi_res_body?.pagebean?.contentlist?.size}")
                     if (mPage == 0) {
-                        contentlist.clear()
+                        viewModels.clear()
                     }
                     if (t.showapi_res_body == null || t.showapi_res_body.pagebean == null || t.showapi_res_body.pagebean.contentlist == null) {
                         return
                     }
-                    contentlist.addAll(t.showapi_res_body.pagebean.contentlist)
-                    mAdapter!!.setData(contentlist)
+                    //将请求到的数据装换为 viewModel
+                    t.showapi_res_body.pagebean.contentlist.forEach {
+                        if (it.imageurls != null && it.imageurls.size > 0){
+                            val titlePicViewModel = TitlePictureViewModel()
+                            titlePicViewModel.jumpUrl = it.link
+                            titlePicViewModel.name = it.title
+                            titlePicViewModel.picUrl = it.imageurls[0].url
+                            viewModels.add(titlePicViewModel)
+                        } else {
+                            val titleViewModel = TitleViewModel()
+                            titleViewModel.jumpUrl = it.link
+                            titleViewModel.name = it.title
+                            viewModels.add(titleViewModel)
+                        }
+                    }
+
+                    mAdapter!!.setData(viewModels)
                     mPage++
                     viewDataBinding!!.refreshLayout.finishRefresh()
                     viewDataBinding!!.refreshLayout.finishLoadMore()

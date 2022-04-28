@@ -1,6 +1,7 @@
 package com.zs.home.news.view.title
 
-class TitleViewModel {
-    var name: String = ""
-    var jumpUrl: String = ""
+import com.zs.home.news.base.BaseViewModel
+
+class TitleViewModel : BaseViewModel(){
+
 }
