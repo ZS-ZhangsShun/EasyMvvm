@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View" />
-        <import type="android.text.TextUtils" />
-        <import type="androidx.databinding.ObservableField" />
+
+        <variable
+            name="viewMoel"
+            type="com.zs.home.news.view.titlewithpicture.PictureTitleViewModel" />
     </data>
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
@@ -25,9 +26,9 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 card_view:cardBackgroundColor="@android:color/transparent"
                 card_view:cardCornerRadius="5dp"
-                android:layout_marginRight="10dp"
                 card_view:cardElevation="0dp"
                 card_view:contentPadding="0dp">
 
@@ -46,6 +47,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="2"
+                android:text="@{viewMoel.name}"
                 android:textColor="#303030"
                 android:textSize="16sp"
                 android:textStyle="bold"

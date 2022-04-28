@@ -15,7 +15,7 @@ class TitleView(context: Context) : LinearLayout(context) {
 
     init {
         binding =
-            DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.title_view, null, false)
+            DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.title_view, this, false)
         binding!!.root.setOnClickListener {
             LogUtil.i("click url is ${viewModel!!.jumpUrl}")
             ToastUtil.showShortToast("click url is ${viewModel!!.jumpUrl}")
