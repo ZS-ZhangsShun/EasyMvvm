@@ -31,6 +31,13 @@ android {
     buildFeatures {
         dataBinding = true
     }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.lifecycle:lifecycle-runtime:2.3.0'
+            force 'androidx.lifecycle:lifecycle-process:2.3.0'
+        }
+    }
 }
 dependencies {
     implementation project(':home')
