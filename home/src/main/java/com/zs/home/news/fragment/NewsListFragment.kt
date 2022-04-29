@@ -22,10 +22,6 @@ import com.zs.home.news.view.titlewithpicture.TitlePictureViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-/**
- * Created by Allen on 2017/7/20.
- * 保留所有版权，未经允许请不要分享到互联网和其他人
- */
 class NewsListFragment : Fragment() {
     private var viewModels: MutableList<BaseViewModel> = mutableListOf()
     private var mAdapter: NewsListRecyclerViewAdapter? = null

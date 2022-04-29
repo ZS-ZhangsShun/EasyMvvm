@@ -2,24 +2,18 @@ package com.zs.home.news.adapter
 
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
-import com.zs.home.network.dto.news.NewsListDTO.Contentlist
 import android.view.ViewGroup
-import android.view.LayoutInflater
-import android.view.View
-import com.zs.home.R
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.zs.common.base.viewholder.BaseViewHolder
+import com.zs.home.news.base.BaseViewHolderJava
 import com.zs.home.news.base.BaseViewModel
 import com.zs.home.news.view.title.TitleView
-import com.zs.home.news.view.title.TitleViewModel
 import com.zs.home.news.view.titlewithpicture.TitlePictureView
 import com.zs.home.news.view.titlewithpicture.TitlePictureViewModel
 
+/**
+ * 单一职责 只关心数据到view的绑定 不处理 view和数据的细节
+ */
 class NewsListRecyclerViewAdapter(private val mContext: Context) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<BaseViewHolderJava>() {
     private val VIEW_TYPE_PICTURE_TITLE = 1
     private val VIEW_TYPE_TITLE = 2
     private var mItems: MutableList<BaseViewModel>? = null
@@ -40,19 +34,15 @@ class NewsListRecyclerViewAdapter(private val mContext: Context) :
         } else VIEW_TYPE_TITLE
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolderJava {
         if (viewType == VIEW_TYPE_PICTURE_TITLE) {
-            return BaseViewHolder(TitlePictureView(mContext))
+            return BaseViewHolderJava(TitlePictureView(mContext))
         } else {
-            return BaseViewHolder(TitleView(mContext))
+            return BaseViewHolderJava(TitleView(mContext))
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder.itemView is TitlePictureView) {
-            (holder.itemView as TitlePictureView).setData(mItems!![position] as TitlePictureViewModel)
-        } else if (holder.itemView is TitleView) {
-            (holder.itemView as TitleView).setData(mItems!![position] as TitleViewModel)
-        }
+    override fun onBindViewHolder(holder: BaseViewHolderJava, position: Int) {
+        holder.bindData(mItems!![position])
     }
 }

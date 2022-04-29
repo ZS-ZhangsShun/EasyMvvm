@@ -11,8 +11,9 @@ import com.zs.easy.common.utils.LogUtil
 import com.zs.easy.common.utils.ToastUtil
 import com.zs.home.R
 import com.zs.home.databinding.TitlePictureViewBinding
+import com.zs.home.news.base.BaseCustomView
 
-class TitlePictureView(context: Context) : LinearLayout(context) {
+class TitlePictureView(context: Context) : LinearLayout(context) ,BaseCustomView<TitlePictureViewModel>{
     var binding: TitlePictureViewBinding? = null
     var viewModel: TitlePictureViewModel? = null
 
@@ -31,10 +32,10 @@ class TitlePictureView(context: Context) : LinearLayout(context) {
         addView(binding!!.root)
     }
 
-    fun setData(titleViewModel: TitlePictureViewModel) {
-        binding!!.viewModel = titleViewModel
+    override fun setData(viewModel: TitlePictureViewModel) {
+        binding!!.viewModel = viewModel
         binding!!.executePendingBindings()
-        this.viewModel = titleViewModel
+        this.viewModel = viewModel
     }
 
     companion object {

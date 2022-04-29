@@ -8,8 +8,9 @@ import com.zs.easy.common.utils.LogUtil
 import com.zs.easy.common.utils.ToastUtil
 import com.zs.home.R
 import com.zs.home.databinding.TitleViewBinding
+import com.zs.home.news.base.BaseCustomView
 
-class TitleView(context: Context) : LinearLayout(context) {
+class TitleView(context: Context) : LinearLayout(context), BaseCustomView<TitleViewModel> {
     var binding: TitleViewBinding? = null
     var viewModel: TitleViewModel? = null
 
@@ -23,7 +24,7 @@ class TitleView(context: Context) : LinearLayout(context) {
         addView(binding!!.root)
     }
 
-    fun setData(viewModel: TitleViewModel) {
+    override fun setData(viewModel: TitleViewModel) {
         binding!!.viewModel = viewModel
         binding!!.executePendingBindings()
         this.viewModel = viewModel
