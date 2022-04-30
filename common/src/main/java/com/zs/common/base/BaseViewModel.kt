@@ -1,4 +1,4 @@
-package com.zs.home.news.base
+package com.zs.common.base
 
 open class BaseViewModel {
     var name: String = ""

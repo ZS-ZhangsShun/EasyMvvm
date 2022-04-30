@@ -8,7 +8,7 @@ import com.zs.easy.common.utils.LogUtil
 import com.zs.easy.common.utils.ToastUtil
 import com.zs.home.R
 import com.zs.home.databinding.TitleViewBinding
-import com.zs.home.news.base.BaseCustomView
+import com.zs.common.base.BaseCustomView
 
 class TitleView(context: Context) : LinearLayout(context), BaseCustomView<TitleViewModel> {
     var binding: TitleViewBinding? = null

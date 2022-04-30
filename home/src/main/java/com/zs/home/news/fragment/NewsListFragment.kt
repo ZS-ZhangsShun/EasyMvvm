@@ -16,7 +16,7 @@ import com.zs.easy.common.utils.LogUtil
 import com.zs.home.databinding.FragmentNewsBinding
 import com.zs.home.network.api.NewsApi
 import com.zs.home.network.dto.news.NewsListDTO
-import com.zs.home.news.base.BaseViewModel
+import com.zs.common.base.BaseViewModel
 import com.zs.home.news.view.title.TitleViewModel
 import com.zs.home.news.view.titlewithpicture.TitlePictureViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers

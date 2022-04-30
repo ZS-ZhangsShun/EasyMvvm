@@ -3,8 +3,8 @@ package com.zs.home.news.adapter
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
-import com.zs.home.news.base.BaseViewHolderJava
-import com.zs.home.news.base.BaseViewModel
+import com.zs.common.base.BaseViewHolderJava
+import com.zs.common.base.BaseViewModel
 import com.zs.home.news.view.title.TitleView
 import com.zs.home.news.view.titlewithpicture.TitlePictureView
 import com.zs.home.news.view.titlewithpicture.TitlePictureViewModel
