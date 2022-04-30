@@ -1,5 +1,5 @@
 package com.zs.common.base
 
-interface BaseCustomView<DATA : BaseViewModel> {
+interface IBaseCustomView<DATA : BaseViewModel> {
     fun setData(viewModel: DATA)
 }

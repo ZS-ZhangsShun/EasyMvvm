@@ -6,9 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class BaseViewHolderJava extends RecyclerView.ViewHolder {
-    private BaseCustomView view;
+    private IBaseCustomView view;
 
-    public BaseViewHolderJava(@NonNull BaseCustomView view) {
+    public BaseViewHolderJava(@NonNull IBaseCustomView view) {
         super((View) view);
         this.view = view;
     }

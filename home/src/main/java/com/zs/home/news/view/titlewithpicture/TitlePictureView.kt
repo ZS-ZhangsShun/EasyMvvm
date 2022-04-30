@@ -11,9 +11,9 @@ import com.zs.easy.common.utils.LogUtil
 import com.zs.easy.common.utils.ToastUtil
 import com.zs.home.R
 import com.zs.home.databinding.TitlePictureViewBinding
-import com.zs.common.base.BaseCustomView
+import com.zs.common.base.IBaseCustomView
 
-class TitlePictureView(context: Context) : LinearLayout(context) ,BaseCustomView<TitlePictureViewModel>{
+class TitlePictureView(context: Context) : LinearLayout(context) ,IBaseCustomView<TitlePictureViewModel>{
     var binding: TitlePictureViewBinding? = null
     var viewModel: TitlePictureViewModel? = null
 
