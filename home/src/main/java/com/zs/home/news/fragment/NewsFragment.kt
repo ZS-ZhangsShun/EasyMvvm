@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.alibaba.fastjson.JSON
 import com.google.android.material.tabs.TabLayout
+import com.zs.common.debug.DebugUtil
 import com.zs.easy.common.http.retrofit.CommonRetrofitServiceFactory
 import com.zs.easy.common.http.retrofit.EasySubscriber
 import com.zs.easy.common.http.retrofit.ExceptionHandle
@@ -22,7 +24,7 @@ import io.reactivex.schedulers.Schedulers
 
 class NewsFragment : Fragment() {
     var binding: FragmentHomeBinding? = null
-    var adapter : NewsFragmentAdapter? = null
+    var adapter: NewsFragmentAdapter? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,6 +41,13 @@ class NewsFragment : Fragment() {
     }
 
     private fun loadChannels() {
+        if (DebugUtil.isDebug) {
+            val dto: NewsChannelsDTO = JSON.parseObject(
+                DebugUtil.channelsJson, NewsChannelsDTO::class.java
+            )
+            refreshWithNewsChannelsDTO(dto)
+            return
+        }
         CommonRetrofitServiceFactory.getInstance().createService(NewsApi::class.java)
             .getNewsChannels()
             .subscribeOn(Schedulers.io())
@@ -52,18 +61,22 @@ class NewsFragment : Fragment() {
                 override fun onComplete(t: NewsChannelsDTO?) {
                     LogUtil.i("getNewsChannels totalNum = ${t!!.showapi_res_body?.totalNum}")
                     //数据转换
-                    val channelList = t.showapi_res_body?.channelList
-                    val list : ArrayList<NewsFragmentAdapter.Channel> = ArrayList()
-                    channelList?.forEach {
-                        val channel:NewsFragmentAdapter.Channel = NewsFragmentAdapter.Channel()
-                        channel.channelId = it.channelId
-                        channel.channelName = it.name
-                        list.add(channel)
-                    }
-                    adapter!!.setChannels(list)
+                    refreshWithNewsChannelsDTO(t)
                 }
 
             })
 
+    }
+
+    private fun refreshWithNewsChannelsDTO(t: NewsChannelsDTO) {
+        val channelList = t.showapi_res_body?.channelList
+        val list: ArrayList<NewsFragmentAdapter.Channel> = ArrayList()
+        channelList?.forEach {
+            val channel: NewsFragmentAdapter.Channel = NewsFragmentAdapter.Channel()
+            channel.channelId = it.channelId
+            channel.channelName = it.name
+            list.add(channel)
+        }
+        adapter!!.setChannels(list)
     }
 }

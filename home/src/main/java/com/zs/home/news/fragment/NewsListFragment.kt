@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.zs.home.R
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.fastjson.JSON
 import com.zs.easy.common.http.retrofit.CommonRetrofitServiceFactory
 import com.zs.easy.common.http.retrofit.EasySubscriber
 import com.zs.easy.common.http.retrofit.ExceptionHandle
@@ -17,6 +18,8 @@ import com.zs.home.databinding.FragmentNewsBinding
 import com.zs.home.network.api.NewsApi
 import com.zs.home.network.dto.news.NewsListDTO
 import com.zs.common.base.BaseViewModel
+import com.zs.common.debug.DebugUtil
+import com.zs.home.network.dto.news.NewsChannelsDTO
 import com.zs.home.news.view.title.TitleViewModel
 import com.zs.home.news.view.titlewithpicture.TitlePictureViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,7 +37,7 @@ class NewsListFragment : Fragment() {
     ): View {
         viewDataBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_news, container, false)
-        mAdapter = NewsListRecyclerViewAdapter(requireContext())
+        mAdapter = NewsListRecyclerViewAdapter()
         viewDataBinding!!.listview.setHasFixedSize(true)
         viewDataBinding!!.listview.layoutManager = LinearLayoutManager(context)
         viewDataBinding!!.listview.adapter = mAdapter
@@ -48,6 +51,15 @@ class NewsListFragment : Fragment() {
     }
 
     private fun load() {
+        if (DebugUtil.isDebug) {
+            val result = DebugUtil.getNewsList(arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_ID))
+            if (!result.isEmpty()) {
+                val dto: NewsListDTO = JSON.parseObject(result, NewsListDTO::class.java)
+                refreshWithNewsListDTO(dto)
+                return
+            }
+
+        }
         CommonRetrofitServiceFactory.getInstance().createService(NewsApi::class.java)
             .getNewsContents(
                 arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_ID), arguments?.getString(
@@ -70,29 +82,33 @@ class NewsListFragment : Fragment() {
                     if (t.showapi_res_body == null || t.showapi_res_body.pagebean == null || t.showapi_res_body.pagebean.contentlist == null) {
                         return
                     }
-                    //将请求到的数据装换为 viewModel
-                    t.showapi_res_body.pagebean.contentlist.forEach {
-                        if (it.imageurls != null && it.imageurls.size > 0){
-                            val titlePicViewModel = TitlePictureViewModel()
-                            titlePicViewModel.jumpUrl = it.link
-                            titlePicViewModel.name = it.title
-                            titlePicViewModel.picUrl = it.imageurls[0].url
-                            viewModels.add(titlePicViewModel)
-                        } else {
-                            val titleViewModel = TitleViewModel()
-                            titleViewModel.jumpUrl = it.link
-                            titleViewModel.name = it.title
-                            viewModels.add(titleViewModel)
-                        }
-                    }
-
-                    mAdapter!!.setData(viewModels)
-                    mPage++
-                    viewDataBinding!!.refreshLayout.finishRefresh()
-                    viewDataBinding!!.refreshLayout.finishLoadMore()
+                    refreshWithNewsListDTO(t)
                 }
 
             })
+    }
+
+    private fun refreshWithNewsListDTO(t: NewsListDTO) {
+        //将请求到的数据装换为 viewModel
+        t.showapi_res_body.pagebean.contentlist.forEach {
+            if (it.imageurls != null && it.imageurls.size > 0) {
+                val titlePicViewModel = TitlePictureViewModel()
+                titlePicViewModel.jumpUrl = it.link
+                titlePicViewModel.name = it.title
+                titlePicViewModel.picUrl = it.imageurls[0].url
+                viewModels.add(titlePicViewModel)
+            } else {
+                val titleViewModel = TitleViewModel()
+                titleViewModel.jumpUrl = it.link
+                titleViewModel.name = it.title
+                viewModels.add(titleViewModel)
+            }
+        }
+
+        mAdapter!!.setData(viewModels)
+        mPage++
+        viewDataBinding!!.refreshLayout.finishRefresh()
+        viewDataBinding!!.refreshLayout.finishLoadMore()
     }
 
     companion object {

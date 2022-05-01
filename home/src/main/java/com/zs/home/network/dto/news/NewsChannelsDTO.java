@@ -48,7 +48,7 @@ public class NewsChannelsDTO extends TencentBaseResponseDTO implements Serializa
             this.channelList = channelList;
         }
     }
-    public class ChannelList implements Serializable {
+    public static class ChannelList implements Serializable {
         public String channelId;
         public String name;
 

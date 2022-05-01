@@ -1,6 +1,5 @@
 package com.zs.home.news.adapter
 
-import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.zs.common.base.BaseViewHolderJava
@@ -12,7 +11,7 @@ import com.zs.home.news.view.titlewithpicture.TitlePictureViewModel
 /**
  * 单一职责 只关心数据到view的绑定 不处理 view和数据的细节
  */
-class NewsListRecyclerViewAdapter(private val mContext: Context) :
+class NewsListRecyclerViewAdapter :
     RecyclerView.Adapter<BaseViewHolderJava>() {
     private val VIEW_TYPE_PICTURE_TITLE = 1
     private val VIEW_TYPE_TITLE = 2
@@ -36,9 +35,9 @@ class NewsListRecyclerViewAdapter(private val mContext: Context) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolderJava {
         if (viewType == VIEW_TYPE_PICTURE_TITLE) {
-            return BaseViewHolderJava(TitlePictureView(mContext))
+            return BaseViewHolderJava(TitlePictureView(parent.context))
         } else {
-            return BaseViewHolderJava(TitleView(mContext))
+            return BaseViewHolderJava(TitleView(parent.context))
         }
     }
 

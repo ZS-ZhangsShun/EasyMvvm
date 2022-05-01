@@ -38,7 +38,7 @@ public class NewsListDTO extends TencentBaseResponseDTO implements Serializable 
         }
     }
 
-    public class Pagebean implements Serializable {
+    public static class Pagebean implements Serializable {
         public Integer allPages;
         public List<Contentlist> contentlist = null;
         public Integer currentPage;
@@ -86,7 +86,7 @@ public class NewsListDTO extends TencentBaseResponseDTO implements Serializable 
         }
     }
 
-    public class Contentlist implements Serializable {
+    public static class Contentlist implements Serializable {
         public List<String> allList = null;
         public String pubDate;
         public String title;
@@ -179,7 +179,7 @@ public class NewsListDTO extends TencentBaseResponseDTO implements Serializable 
         }
     }
 
-    public class ImageUrl implements Serializable {
+    public static class ImageUrl implements Serializable {
         public String height;
         public String width;
         public String url;
