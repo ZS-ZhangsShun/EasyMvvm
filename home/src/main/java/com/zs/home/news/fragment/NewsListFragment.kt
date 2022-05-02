@@ -9,26 +9,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.zs.home.R
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.alibaba.fastjson.JSON
-import com.zs.easy.common.http.retrofit.CommonRetrofitServiceFactory
-import com.zs.easy.common.http.retrofit.EasySubscriber
+import com.zs.common.base.model.IBaseModelCallback
 import com.zs.easy.common.http.retrofit.ExceptionHandle
 import com.zs.easy.common.utils.LogUtil
 import com.zs.home.databinding.FragmentNewsBinding
-import com.zs.home.network.api.NewsApi
-import com.zs.home.network.dto.news.NewsListDTO
 import com.zs.common.base.viewmodel.BaseViewModel
-import com.zs.common.debug.DebugUtil
-import com.zs.home.news.view.title.TitleViewModel
-import com.zs.home.news.view.titlewithpicture.TitlePictureViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.zs.home.network.model.NewsListModel
 
-class NewsListFragment : Fragment() {
+class NewsListFragment : Fragment(), IBaseModelCallback<MutableList<BaseViewModel>> {
     private var viewModels: MutableList<BaseViewModel> = mutableListOf()
     private var mAdapter: NewsListRecyclerViewAdapter? = null
     private var viewDataBinding: FragmentNewsBinding? = null
-    private var mPage = 1
+    private var mPage = 0
+    private var model: NewsListModel? = null
+    private var channelId: String? = null
+    private var channelName: String? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,74 +35,19 @@ class NewsListFragment : Fragment() {
         viewDataBinding!!.listview.setHasFixedSize(true)
         viewDataBinding!!.listview.layoutManager = LinearLayoutManager(context)
         viewDataBinding!!.listview.adapter = mAdapter
-        load()
+        channelId = arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_ID)
+        channelName = arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_NAME)
+        model = NewsListModel(this)
+        model!!.loadChannels(channelId, channelName, mPage.toString())
         viewDataBinding!!.refreshLayout.setOnRefreshListener {
             mPage = 0
-            load()
+            model!!.loadChannels(channelId, channelName, mPage.toString())
         }
-        viewDataBinding!!.refreshLayout.setOnLoadMoreListener { load() }
+        viewDataBinding!!.refreshLayout.setOnLoadMoreListener {
+            mPage++
+            model!!.loadChannels(channelId, channelName, mPage.toString())
+        }
         return viewDataBinding!!.root
-    }
-
-    private fun load() {
-        if (DebugUtil.isDebug) {
-            val result = DebugUtil.getNewsList(arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_ID))
-            if (!result.isEmpty()) {
-                val dto: NewsListDTO = JSON.parseObject(result, NewsListDTO::class.java)
-                refreshWithNewsListDTO(dto)
-                return
-            }
-
-        }
-        CommonRetrofitServiceFactory.getInstance().createService(NewsApi::class.java)
-            .getNewsContents(
-                arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_ID), arguments?.getString(
-                    BUNDLE_KEY_PARAM_CHANNEL_NAME
-                ), mPage.toString()
-            )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : EasySubscriber<NewsListDTO>() {
-                override fun onError(responseThrowable: ExceptionHandle.ResponseThrowable?) {
-                    LogUtil.i("getNewsContents error code = ${responseThrowable!!.code}")
-                    LogUtil.i("getNewsContents error = ${responseThrowable.errorJson}")
-                }
-
-                override fun onComplete(t: NewsListDTO?) {
-                    LogUtil.i("getNewsContents cur news size  = ${t!!.showapi_res_body?.pagebean?.contentlist?.size}")
-                    if (mPage == 0) {
-                        viewModels.clear()
-                    }
-                    if (t.showapi_res_body == null || t.showapi_res_body.pagebean == null || t.showapi_res_body.pagebean.contentlist == null) {
-                        return
-                    }
-                    refreshWithNewsListDTO(t)
-                }
-
-            })
-    }
-
-    private fun refreshWithNewsListDTO(t: NewsListDTO) {
-        //将请求到的数据装换为 viewModel
-        t.showapi_res_body.pagebean.contentlist.forEach {
-            if (it.imageurls != null && it.imageurls.size > 0) {
-                val titlePicViewModel = TitlePictureViewModel()
-                titlePicViewModel.jumpUrl = it.link
-                titlePicViewModel.name = it.title
-                titlePicViewModel.picUrl = it.imageurls[0].url
-                viewModels.add(titlePicViewModel)
-            } else {
-                val titleViewModel = TitleViewModel()
-                titleViewModel.jumpUrl = it.link
-                titleViewModel.name = it.title
-                viewModels.add(titleViewModel)
-            }
-        }
-
-        mAdapter!!.setData(viewModels)
-        mPage++
-        viewDataBinding!!.refreshLayout.finishRefresh()
-        viewDataBinding!!.refreshLayout.finishLoadMore()
     }
 
     companion object {
@@ -123,5 +63,24 @@ class NewsListFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+    }
+
+    override fun onLoadSuccess(data: MutableList<BaseViewModel>?) {
+        LogUtil.i("getNewsContents cur news size  = ${data?.size}")
+        if (mPage == 0) {
+            viewModels.clear()
+        }
+        if (data == null || data.size == 0) {
+            return
+        }
+        viewModels.addAll(data)
+        mAdapter!!.setData(viewModels)
+        viewDataBinding!!.refreshLayout.finishRefresh()
+        viewDataBinding!!.refreshLayout.finishLoadMore()
+    }
+
+    override fun onLoadError(responseThrowable: ExceptionHandle.ResponseThrowable?, msg: String?) {
+        LogUtil.i("getNewsContents error code = ${responseThrowable?.code}")
+        LogUtil.i("getNewsContents error = ${responseThrowable?.errorJson}")
     }
 }
