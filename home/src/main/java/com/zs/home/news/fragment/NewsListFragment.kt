@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.zs.home.R
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zs.common.base.model.IBaseModelCallback
+import com.zs.common.base.model.PagingResult
 import com.zs.easy.common.http.retrofit.ExceptionHandle
 import com.zs.easy.common.utils.LogUtil
 import com.zs.home.databinding.FragmentNewsBinding
@@ -20,7 +21,6 @@ class NewsListFragment : Fragment(), IBaseModelCallback<MutableList<BaseViewMode
     private var viewModels: MutableList<BaseViewModel> = mutableListOf()
     private var mAdapter: NewsListRecyclerViewAdapter? = null
     private var viewDataBinding: FragmentNewsBinding? = null
-    private var mPage = 0
     private var model: NewsListModel? = null
     private var channelId: String? = null
     private var channelName: String? = null
@@ -37,15 +37,13 @@ class NewsListFragment : Fragment(), IBaseModelCallback<MutableList<BaseViewMode
         viewDataBinding!!.listview.adapter = mAdapter
         channelId = arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_ID)
         channelName = arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_NAME)
-        model = NewsListModel(this)
-        model!!.loadChannels(channelId, channelName, mPage.toString())
+        model = NewsListModel(this,channelId,channelName)
+        model!!.refresh()
         viewDataBinding!!.refreshLayout.setOnRefreshListener {
-            mPage = 0
-            model!!.loadChannels(channelId, channelName, mPage.toString())
+            model!!.refresh()
         }
         viewDataBinding!!.refreshLayout.setOnLoadMoreListener {
-            mPage++
-            model!!.loadChannels(channelId, channelName, mPage.toString())
+            model!!.loadNextPageChannels()
         }
         return viewDataBinding!!.root
     }
@@ -65,11 +63,23 @@ class NewsListFragment : Fragment(), IBaseModelCallback<MutableList<BaseViewMode
         }
     }
 
-    override fun onLoadSuccess(data: MutableList<BaseViewModel>?) {
+    override fun onLoadError(responseThrowable: ExceptionHandle.ResponseThrowable?, msg: String?) {
+        LogUtil.i("getNewsContents error code = ${responseThrowable?.code}")
+        LogUtil.i("getNewsContents error = ${responseThrowable?.errorJson}")
+    }
+
+    override fun onLoadSuccess(
+        data: MutableList<BaseViewModel>?,
+        vararg pagingResult: PagingResult
+    ) {
         LogUtil.i("getNewsContents cur news size  = ${data?.size}")
-        if (mPage == 0) {
-            viewModels.clear()
+        if (pagingResult.size > 0){
+            val pr = pagingResult[0]
+            if (pr.isFristPage) {
+                viewModels.clear()
+            }
         }
+
         if (data == null || data.size == 0) {
             return
         }
@@ -77,10 +87,5 @@ class NewsListFragment : Fragment(), IBaseModelCallback<MutableList<BaseViewMode
         mAdapter!!.setData(viewModels)
         viewDataBinding!!.refreshLayout.finishRefresh()
         viewDataBinding!!.refreshLayout.finishLoadMore()
-    }
-
-    override fun onLoadError(responseThrowable: ExceptionHandle.ResponseThrowable?, msg: String?) {
-        LogUtil.i("getNewsContents error code = ${responseThrowable?.code}")
-        LogUtil.i("getNewsContents error = ${responseThrowable?.errorJson}")
     }
 }

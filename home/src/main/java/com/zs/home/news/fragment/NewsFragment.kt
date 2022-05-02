@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSON
 import com.google.android.material.tabs.TabLayout
 import com.zs.common.base.model.IBaseModelCallback
+import com.zs.common.base.model.PagingResult
 import com.zs.common.debug.DebugUtil
 import com.zs.easy.common.http.retrofit.CommonRetrofitServiceFactory
 import com.zs.easy.common.http.retrofit.EasySubscriber
@@ -42,7 +43,10 @@ class NewsFragment : Fragment(), IBaseModelCallback<MutableList<NewsChannelsDTO.
         return binding!!.root
     }
 
-    override fun onLoadSuccess(data: MutableList<NewsChannelsDTO.ChannelList>?) {
+    override fun onLoadSuccess(
+        data: MutableList<NewsChannelsDTO.ChannelList>?,
+        vararg pagingResult: PagingResult
+    ) {
         LogUtil.i("getNewsChannels success totalNum = ${data?.size}")
         adapter!!.setChannels(data)
     }
