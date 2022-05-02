@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSON
 import com.google.android.material.tabs.TabLayout
+import com.zs.common.base.model.IBaseModelCallback
 import com.zs.common.debug.DebugUtil
 import com.zs.easy.common.http.retrofit.CommonRetrofitServiceFactory
 import com.zs.easy.common.http.retrofit.EasySubscriber
@@ -18,13 +19,14 @@ import com.zs.home.databinding.FragmentHomeBinding
 import com.zs.home.network.api.NewsApi
 import com.zs.home.network.dto.news.NewsChannelsDTO
 import com.zs.home.network.dto.news.NewsListDTO
+import com.zs.home.network.model.NewsChannelsModel
 import com.zs.home.news.adapter.NewsFragmentAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class NewsFragment : Fragment() {
+class NewsFragment : Fragment(), IBaseModelCallback<MutableList<NewsChannelsDTO.ChannelList>> {
     var binding: FragmentHomeBinding? = null
-    var adapter: NewsFragmentAdapter? = null
+    private var adapter: NewsFragmentAdapter? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,47 +38,17 @@ class NewsFragment : Fragment() {
         binding!!.viewpager.offscreenPageLimit = 1
         binding!!.tablayout.tabMode = TabLayout.MODE_SCROLLABLE
         binding!!.tablayout.setupWithViewPager(binding!!.viewpager)
-        loadChannels()
+        NewsChannelsModel(this@NewsFragment).loadChannels()
         return binding!!.root
     }
 
-    private fun loadChannels() {
-        if (DebugUtil.isDebug) {
-            val dto: NewsChannelsDTO = JSON.parseObject(
-                DebugUtil.channelsJson, NewsChannelsDTO::class.java
-            )
-            refreshWithNewsChannelsDTO(dto)
-            return
-        }
-        CommonRetrofitServiceFactory.getInstance().createService(NewsApi::class.java)
-            .getNewsChannels()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : EasySubscriber<NewsChannelsDTO>() {
-                override fun onError(responseThrowable: ExceptionHandle.ResponseThrowable?) {
-                    LogUtil.i("getNewsChannels error code = ${responseThrowable!!.code}")
-                    LogUtil.i("getNewsChannels error = ${responseThrowable.errorJson}")
-                }
-
-                override fun onComplete(t: NewsChannelsDTO?) {
-                    LogUtil.i("getNewsChannels totalNum = ${t!!.showapi_res_body?.totalNum}")
-                    //数据转换
-                    refreshWithNewsChannelsDTO(t)
-                }
-
-            })
-
+    override fun onLoadSuccess(data: MutableList<NewsChannelsDTO.ChannelList>?) {
+        LogUtil.i("getNewsChannels success totalNum = ${data?.size}")
+        adapter!!.setChannels(data)
     }
 
-    private fun refreshWithNewsChannelsDTO(t: NewsChannelsDTO) {
-        val channelList = t.showapi_res_body?.channelList
-        val list: ArrayList<NewsFragmentAdapter.Channel> = ArrayList()
-        channelList?.forEach {
-            val channel: NewsFragmentAdapter.Channel = NewsFragmentAdapter.Channel()
-            channel.channelId = it.channelId
-            channel.channelName = it.name
-            list.add(channel)
-        }
-        adapter!!.setChannels(list)
+    override fun onLoadError(responseThrowable: ExceptionHandle.ResponseThrowable?, msg: String?) {
+        LogUtil.i("getNewsChannels error code = ${responseThrowable!!.code}")
+        LogUtil.i("getNewsChannels error = ${responseThrowable.errorJson}")
     }
 }

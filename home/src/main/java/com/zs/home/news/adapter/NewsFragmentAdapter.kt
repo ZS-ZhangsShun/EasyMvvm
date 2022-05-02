@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.zs.home.network.dto.news.NewsChannelsDTO
 import com.zs.home.news.fragment.NewsListFragment
 import java.util.ArrayList
 import java.util.HashMap
@@ -11,25 +12,21 @@ import java.util.HashMap
 class NewsFragmentAdapter(fm: FragmentManager?) : FragmentPagerAdapter(
     fm!!
 ) {
-    class Channel {
-        var channelId: String? = null
-        var channelName: String? = null
-    }
 
-    private var mChannels: ArrayList<Channel>? = null
+    private var mChannels: MutableList<NewsChannelsDTO.ChannelList>? = null
     private val fragmentHashMap = HashMap<String, Fragment?>()
-    fun setChannels(channels: ArrayList<Channel>?) {
+    fun setChannels(channels: MutableList<NewsChannelsDTO.ChannelList>?) {
         mChannels = channels
         notifyDataSetChanged()
     }
 
     override fun getItem(pos: Int): Fragment {
-        val key = mChannels!![pos].channelId + ":" + mChannels!![pos].channelName
+        val key = mChannels!![pos].channelId + ":" + mChannels!![pos].name
         if (fragmentHashMap[key] != null) {
             return fragmentHashMap[key]!!
         }
         val fragment: Fragment =
-            NewsListFragment.newInstance(mChannels!![pos].channelId, mChannels!![pos].channelName)
+            NewsListFragment.newInstance(mChannels!![pos].channelId, mChannels!![pos].name)
         fragmentHashMap[key] = fragment
         return fragment
     }
@@ -41,7 +38,7 @@ class NewsFragmentAdapter(fm: FragmentManager?) : FragmentPagerAdapter(
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return mChannels!![position].channelName
+        return mChannels!![position].name
     }
 
     override fun restoreState(parcelable: Parcelable?, classLoader: ClassLoader?) {}

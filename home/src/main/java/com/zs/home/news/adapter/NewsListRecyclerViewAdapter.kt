@@ -2,8 +2,8 @@ package com.zs.home.news.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
-import com.zs.common.base.BaseViewHolderJava
-import com.zs.common.base.BaseViewModel
+import com.zs.common.base.viewholder.BaseViewHolderJava
+import com.zs.common.base.viewmodel.BaseViewModel
 import com.zs.home.news.view.title.TitleView
 import com.zs.home.news.view.titlewithpicture.TitlePictureView
 import com.zs.home.news.view.titlewithpicture.TitlePictureViewModel
@@ -35,9 +35,15 @@ class NewsListRecyclerViewAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolderJava {
         if (viewType == VIEW_TYPE_PICTURE_TITLE) {
-            return BaseViewHolderJava(TitlePictureView(parent.context))
+            return BaseViewHolderJava(
+                TitlePictureView(parent.context)
+            )
         } else {
-            return BaseViewHolderJava(TitleView(parent.context))
+            return BaseViewHolderJava(
+                TitleView(
+                    parent.context
+                )
+            )
         }
     }
 

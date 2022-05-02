@@ -1,12 +1,11 @@
 package com.zs.home.news.view.title
 
 import android.content.Context
-import com.zs.common.base.BaseCustomView
+import com.zs.common.base.view.BaseCustomView
 import com.zs.easy.common.utils.LogUtil
 import com.zs.easy.common.utils.ToastUtil
 import com.zs.home.R
 import com.zs.home.databinding.TitleViewBinding
-import com.zs.common.base.IBaseCustomView
 
 class TitleView(context: Context) : BaseCustomView<TitleViewBinding, TitleViewModel>(context){
 

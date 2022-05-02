@@ -1,4 +1,4 @@
-package com.zs.common.base
+package com.zs.common.base.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.zs.common.base.viewmodel.BaseViewModel
 
 abstract class BaseCustomView<BINDING : ViewDataBinding, VIEWMODEL : BaseViewModel> : LinearLayout,
     IBaseCustomView<VIEWMODEL> {

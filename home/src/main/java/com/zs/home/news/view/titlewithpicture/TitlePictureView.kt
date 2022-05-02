@@ -1,10 +1,7 @@
 package com.zs.home.news.view.titlewithpicture
 
 import android.content.Context
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
-import com.bumptech.glide.Glide
-import com.zs.common.base.BaseCustomView
+import com.zs.common.base.view.BaseCustomView
 import com.zs.easy.common.utils.LogUtil
 import com.zs.easy.common.utils.ToastUtil
 import com.zs.home.R
