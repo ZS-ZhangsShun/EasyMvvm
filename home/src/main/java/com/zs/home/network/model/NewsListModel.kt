@@ -1,7 +1,7 @@
 package com.zs.home.network.model
 
 import com.alibaba.fastjson.JSON
-import com.zs.common.base.model.IBaseModelCallback
+import com.zs.common.base.model.BaseModelJava
 import com.zs.common.base.model.PagingResult
 import com.zs.common.base.viewmodel.BaseViewModel
 import com.zs.common.debug.DebugUtil
@@ -16,25 +16,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class NewsListModel(
-    val callback: IBaseModelCallback<MutableList<BaseViewModel>>,
     val id: String?,
     val name: String?
-) {
-    private var page = 1
+) : BaseModelJava<MutableList<BaseViewModel>>(true, 1) {
 
-    fun refresh() {
-        page = 1
-        loadNextPageChannels()
-    }
-
-    fun loadNextPageChannels() {
+    override fun requestData() {
         if (DebugUtil.isDebug) {
             val result = DebugUtil.getNewsList(id)
             if (!result.isEmpty()) {
                 val dto: NewsListDTO = JSON.parseObject(result, NewsListDTO::class.java)
                 val viewModels: MutableList<BaseViewModel> =
                     convertContentListToViewModels(dto.showapi_res_body.pagebean.contentlist)
-                callback.onLoadSuccess(viewModels, PagingResult(true, true, false))
+                notifySuccessWithData(viewModels)
                 return
             }
 
@@ -45,7 +38,7 @@ class NewsListModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : EasySubscriber<NewsListDTO>() {
                 override fun onError(responseThrowable: ExceptionHandle.ResponseThrowable?) {
-                    callback.onLoadError(responseThrowable, responseThrowable?.message)
+                    notifyErrorWithMsg(responseThrowable)
                 }
 
                 override fun onComplete(t: NewsListDTO?) {
@@ -53,15 +46,11 @@ class NewsListModel(
                         || t.showapi_res_body.pagebean.contentlist == null
                         || t.showapi_res_body.pagebean.contentlist.size == 0
                     ) {
-                        callback.onLoadSuccess(null, PagingResult(page == 1, true, true))
+                        notifySuccessWithData(null)
                     } else {
-                        page++
                         val viewModels: MutableList<BaseViewModel> =
                             convertContentListToViewModels(t.showapi_res_body.pagebean.contentlist)
-                        callback.onLoadSuccess(
-                            viewModels,
-                            PagingResult(page == 1, viewModels.size < 10, false)
-                        )
+                        notifySuccessWithData(viewModels)
                     }
                 }
 

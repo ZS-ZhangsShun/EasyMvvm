@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.zs.home.R
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.zs.common.base.model.BaseModelJava
 import com.zs.common.base.model.IBaseModelCallback
 import com.zs.common.base.model.PagingResult
 import com.zs.easy.common.http.retrofit.ExceptionHandle
@@ -37,13 +38,14 @@ class NewsListFragment : Fragment(), IBaseModelCallback<MutableList<BaseViewMode
         viewDataBinding!!.listview.adapter = mAdapter
         channelId = arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_ID)
         channelName = arguments?.getString(BUNDLE_KEY_PARAM_CHANNEL_NAME)
-        model = NewsListModel(this,channelId,channelName)
-        model!!.refresh()
+        model = NewsListModel(channelId, channelName)
+        model!!.registerCallback(this)
+        model!!.load()
         viewDataBinding!!.refreshLayout.setOnRefreshListener {
-            model!!.refresh()
+            model!!.load()
         }
         viewDataBinding!!.refreshLayout.setOnLoadMoreListener {
-            model!!.loadNextPageChannels()
+            model!!.loadNextPageData()
         }
         return viewDataBinding!!.root
     }
@@ -63,17 +65,26 @@ class NewsListFragment : Fragment(), IBaseModelCallback<MutableList<BaseViewMode
         }
     }
 
-    override fun onLoadError(responseThrowable: ExceptionHandle.ResponseThrowable?, msg: String?) {
+    override fun onLoadError(
+        model: BaseModelJava<*>,
+        responseThrowable: ExceptionHandle.ResponseThrowable?,
+        msg: String?,
+        vararg pagingResult: PagingResult
+    ) {
         LogUtil.i("getNewsContents error code = ${responseThrowable?.code}")
         LogUtil.i("getNewsContents error = ${responseThrowable?.errorJson}")
     }
 
     override fun onLoadSuccess(
+        model: BaseModelJava<*>,
         data: MutableList<BaseViewModel>?,
         vararg pagingResult: PagingResult
     ) {
+        if (model is NewsListModel) {
+            LogUtil.i("cur model is NewsListModel")
+        }
         LogUtil.i("getNewsContents cur news size  = ${data?.size}")
-        if (pagingResult.size > 0){
+        if (pagingResult.size > 0) {
             val pr = pagingResult[0]
             if (pr.isFristPage) {
                 viewModels.clear()

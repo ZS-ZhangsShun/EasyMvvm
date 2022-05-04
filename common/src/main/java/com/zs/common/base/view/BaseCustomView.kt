@@ -52,9 +52,9 @@ abstract class BaseCustomView<BINDING : ViewDataBinding, VIEWMODEL : BaseViewMod
     }
 
     override fun setData(viewModel: VIEWMODEL) {
+        this.viewModel = viewModel
         bindViewModel(viewModel)
         binding.executePendingBindings()
-        this.viewModel = viewModel
     }
 
     /**
